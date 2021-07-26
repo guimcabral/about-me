@@ -9,23 +9,28 @@ import com.example.aboutme.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val myName: MyName = MyName("Aleks Haecky")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.myName = myName
         binding.doneButton.setOnClickListener { addNickName(it) }
     }
 
     private fun addNickName(view: View) {
-        val nicknameEditText = binding.nicknameEdit
-        val nicknameTextView = binding.nicknameText
+        binding.apply {
+            myName?.nickname = nicknameEdit.text.toString()
 
-        nicknameTextView.text = nicknameEditText.text
-        nicknameEditText.visibility = View.GONE
-        view.visibility = View.GONE
-        nicknameTextView.visibility = View.VISIBLE
+            // Invalidate all binding expressions and request a new rebind to refresh UI
+            invalidateAll()
+
+            nicknameEdit.visibility = View.GONE
+            doneButton.visibility = View.GONE
+            nicknameText.visibility = View.VISIBLE
+        }
 
         // Hide the keyboard.
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
